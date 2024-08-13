@@ -1,4 +1,4 @@
-module goProtoc
+module github.com/harryin777/goProtoc
 
 go 1.22.6
 
