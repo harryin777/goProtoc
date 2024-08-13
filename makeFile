@@ -1,0 +1,3 @@
+GOPATH:=$(shell go env GOPATH)
+build:
+	protoc --go_out=. product1/product.proto
