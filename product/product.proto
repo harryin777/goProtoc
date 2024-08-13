@@ -1,8 +1,13 @@
+// brew install protoc-gen-go
+// brew install protobuf
+
 // go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 // go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 syntax = "proto3";
 package product1;
+option go_package="prod/";
+
 service ProductInfo {
   rpc addProduct(Product) returns (ProductID);
   rpc getProduct(ProductID) returns (Product);
