@@ -25,8 +25,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProductInfo_AddProduct_FullMethodName = "/product1.ProductInfo/addProduct"
-	ProductInfo_GetProduct_FullMethodName = "/product1.ProductInfo/getProduct"
+	ProductInfo_AddProduct_FullMethodName = "/product1.ProductInfo/AddProduct"
+	ProductInfo_GetProduct_FullMethodName = "/product1.ProductInfo/GetProduct"
 )
 
 // ProductInfoClient is the client API for ProductInfo service.
@@ -152,11 +152,11 @@ var ProductInfo_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ProductInfoServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "addProduct",
+			MethodName: "AddProduct",
 			Handler:    _ProductInfo_AddProduct_Handler,
 		},
 		{
-			MethodName: "getProduct",
+			MethodName: "GetProduct",
 			Handler:    _ProductInfo_GetProduct_Handler,
 		},
 	},

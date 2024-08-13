@@ -9,8 +9,8 @@ package product1;
 option go_package="prod/";
 
 service ProductInfo {
-  rpc addProduct(Product) returns (ProductID);
-  rpc getProduct(ProductID) returns (Product);
+  rpc AddProduct(Product) returns (ProductID);
+  rpc GetProduct(ProductID) returns (Product);
 }
 message Product {
   string id = 1;
