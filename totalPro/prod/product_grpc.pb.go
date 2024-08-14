@@ -167,6 +167,7 @@ var ProductInfo_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	OrderManagement_SearchOrders_FullMethodName = "/product1.OrderManagement/searchOrders"
+	OrderManagement_UpdateOrders_FullMethodName = "/product1.OrderManagement/updateOrders"
 )
 
 // OrderManagementClient is the client API for OrderManagement service.
@@ -174,6 +175,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrderManagementClient interface {
 	SearchOrders(ctx context.Context, in *wrapperspb.StringValue, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Order], error)
+	UpdateOrders(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[Order, wrapperspb.StringValue], error)
 }
 
 type orderManagementClient struct {
@@ -203,11 +205,25 @@ func (c *orderManagementClient) SearchOrders(ctx context.Context, in *wrapperspb
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type OrderManagement_SearchOrdersClient = grpc.ServerStreamingClient[Order]
 
+func (c *orderManagementClient) UpdateOrders(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[Order, wrapperspb.StringValue], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &OrderManagement_ServiceDesc.Streams[1], OrderManagement_UpdateOrders_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[Order, wrapperspb.StringValue]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrderManagement_UpdateOrdersClient = grpc.ClientStreamingClient[Order, wrapperspb.StringValue]
+
 // OrderManagementServer is the server API for OrderManagement service.
 // All implementations must embed UnimplementedOrderManagementServer
 // for forward compatibility.
 type OrderManagementServer interface {
 	SearchOrders(*wrapperspb.StringValue, grpc.ServerStreamingServer[Order]) error
+	UpdateOrders(grpc.ClientStreamingServer[Order, wrapperspb.StringValue]) error
 	mustEmbedUnimplementedOrderManagementServer()
 }
 
@@ -220,6 +236,9 @@ type UnimplementedOrderManagementServer struct{}
 
 func (UnimplementedOrderManagementServer) SearchOrders(*wrapperspb.StringValue, grpc.ServerStreamingServer[Order]) error {
 	return status.Errorf(codes.Unimplemented, "method SearchOrders not implemented")
+}
+func (UnimplementedOrderManagementServer) UpdateOrders(grpc.ClientStreamingServer[Order, wrapperspb.StringValue]) error {
+	return status.Errorf(codes.Unimplemented, "method UpdateOrders not implemented")
 }
 func (UnimplementedOrderManagementServer) mustEmbedUnimplementedOrderManagementServer() {}
 func (UnimplementedOrderManagementServer) testEmbeddedByValue()                         {}
@@ -253,6 +272,13 @@ func _OrderManagement_SearchOrders_Handler(srv interface{}, stream grpc.ServerSt
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type OrderManagement_SearchOrdersServer = grpc.ServerStreamingServer[Order]
 
+func _OrderManagement_UpdateOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(OrderManagementServer).UpdateOrders(&grpc.GenericServerStream[Order, wrapperspb.StringValue]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrderManagement_UpdateOrdersServer = grpc.ClientStreamingServer[Order, wrapperspb.StringValue]
+
 // OrderManagement_ServiceDesc is the grpc.ServiceDesc for OrderManagement service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -265,6 +291,11 @@ var OrderManagement_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "searchOrders",
 			Handler:       _OrderManagement_SearchOrders_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "updateOrders",
+			Handler:       _OrderManagement_UpdateOrders_Handler,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "product/product.proto",
