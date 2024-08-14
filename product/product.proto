@@ -5,6 +5,7 @@
 // go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 syntax = "proto3";
+import "google/protobuf/wrappers.proto";
 package product1;
 option go_package="prod/";
 
@@ -19,4 +20,16 @@ message Product {
 }
 message ProductID {
   string value = 1;
+}
+
+
+service OrderManagement {
+  rpc searchOrders(google.protobuf.StringValue) returns (stream Order);
+}
+message Order {
+  string id = 1;
+  repeated string items = 2;
+  string description = 3;
+  float price = 4;
+  string destination = 5;
 }
